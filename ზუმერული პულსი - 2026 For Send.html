@@ -1,0 +1,914 @@
+<!DOCTYPE html>
+<html lang="ka">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ზუმერული პულსი 2026 — Sales Department</title>
+<link href="https://fonts.googleapis.com/css2?family=BPG+Nino+Mtavruli&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0d0f14;
+    --card: #161922;
+    --card2: #1e2230;
+    --accent: #4f8ef7;
+    --accent2: #7c5cfc;
+    --green: #2ecc71;
+    --yellow: #f1c40f;
+    --red: #e74c3c;
+    --text: #e8eaf6;
+    --muted: #7b82a0;
+    --border: #272d40;
+    --radius: 16px;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Segoe UI', 'Helvetica Neue', sans-serif;
+    min-height: 100vh;
+    padding: 40px 20px 80px;
+  }
+
+  .hero {
+    text-align: center;
+    margin-bottom: 48px;
+    position: relative;
+  }
+
+  .hero::before {
+    content: '';
+    position: absolute;
+    top: -60px; left: 50%;
+    transform: translateX(-50%);
+    width: 600px; height: 300px;
+    background: radial-gradient(ellipse, rgba(79,142,247,0.12) 0%, transparent 70%);
+    pointer-events: none;
+  }
+
+  .hero-badge {
+    display: inline-block;
+    background: rgba(79,142,247,0.15);
+    border: 1px solid rgba(79,142,247,0.3);
+    color: var(--accent);
+    font-size: 12px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    padding: 6px 18px;
+    border-radius: 100px;
+    margin-bottom: 20px;
+  }
+
+  h1 {
+    font-size: clamp(28px, 5vw, 46px);
+    font-weight: 800;
+    letter-spacing: -1px;
+    margin-bottom: 14px;
+    background: linear-gradient(135deg, #fff 30%, var(--accent));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  .hero p {
+    color: var(--muted);
+    font-size: 16px;
+    max-width: 520px;
+    margin: 0 auto;
+    line-height: 1.7;
+  }
+
+  .form-wrapper {
+    max-width: 780px;
+    margin: 0 auto;
+  }
+
+  .section-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 36px;
+    margin-bottom: 24px;
+    position: relative;
+    transition: border-color 0.3s;
+  }
+
+  .section-card:hover { border-color: rgba(79,142,247,0.3); }
+
+  .section-header {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    margin-bottom: 28px;
+  }
+
+  .section-icon {
+    width: 44px; height: 44px;
+    border-radius: 12px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 20px;
+    flex-shrink: 0;
+  }
+
+  .section-title {
+    font-size: 18px;
+    font-weight: 700;
+    color: #fff;
+  }
+
+  .section-subtitle {
+    font-size: 13px;
+    color: var(--muted);
+    margin-top: 2px;
+  }
+
+  /* Form fields */
+  .field { margin-bottom: 24px; }
+
+  label.field-label {
+    display: block;
+    font-size: 14px;
+    font-weight: 600;
+    color: #c5cae9;
+    margin-bottom: 10px;
+  }
+
+  .required { color: var(--accent); margin-left: 4px; }
+
+  input[type="text"], input[type="number"], select, textarea {
+    width: 100%;
+    background: var(--card2);
+    border: 1.5px solid var(--border);
+    border-radius: 10px;
+    color: var(--text);
+    font-size: 15px;
+    padding: 12px 16px;
+    transition: border-color 0.2s, box-shadow 0.2s;
+    outline: none;
+    font-family: inherit;
+  }
+
+  input[type="text"]:focus, input[type="number"]:focus,
+  select:focus, textarea:focus {
+    border-color: var(--accent);
+    box-shadow: 0 0 0 3px rgba(79,142,247,0.12);
+  }
+
+  select { cursor: pointer; }
+  textarea { resize: vertical; min-height: 100px; line-height: 1.6; }
+
+  /* Rating stars */
+  .star-rating {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+  }
+
+  .star-rating input { display: none; }
+  .star-rating label {
+    font-size: 32px;
+    cursor: pointer;
+    color: var(--border);
+    transition: color 0.15s, transform 0.15s;
+    line-height: 1;
+  }
+  .star-rating label:hover,
+  .star-rating label:hover ~ label { color: var(--border); }
+  .star-rating input:checked ~ label { color: var(--border); }
+  .star-rating label:hover,
+  .star-rating input:checked + label,
+  .star-rating input:checked ~ label { color: var(--border); }
+
+  /* Fix star direction (RTL trick) */
+  .star-rating { flex-direction: row-reverse; justify-content: flex-end; }
+  .star-rating label:hover,
+  .star-rating label:hover ~ label,
+  .star-rating input:checked ~ label,
+  .star-rating input:checked + label { color: #f1c40f; }
+  .star-rating label:hover { transform: scale(1.15); }
+
+  /* Scale 1-10 */
+  .scale-group {
+    display: flex;
+    gap: 6px;
+    flex-wrap: wrap;
+  }
+
+  .scale-group input { display: none; }
+  .scale-group label {
+    width: 48px; height: 48px;
+    border: 1.5px solid var(--border);
+    border-radius: 10px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 15px;
+    font-weight: 700;
+    cursor: pointer;
+    color: var(--muted);
+    transition: all 0.2s;
+    background: var(--card2);
+  }
+
+  .scale-group label:hover { border-color: var(--accent); color: var(--accent); }
+  .scale-group input:checked + label {
+    background: var(--accent);
+    border-color: var(--accent);
+    color: #fff;
+    box-shadow: 0 4px 16px rgba(79,142,247,0.3);
+  }
+
+  /* Radio / Checkbox */
+  .options-list { display: flex; flex-direction: column; gap: 10px; }
+  .option-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 12px 16px;
+    background: var(--card2);
+    border: 1.5px solid var(--border);
+    border-radius: 10px;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+  .option-item:hover { border-color: var(--accent); }
+  .option-item input { accent-color: var(--accent); width: 18px; height: 18px; cursor: pointer; }
+  .option-item span { font-size: 14px; color: var(--text); }
+  .option-item.selected {
+    border-color: var(--accent);
+    background: rgba(79,142,247,0.08);
+  }
+
+  /* Progress bar */
+  .progress-wrap {
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    background: rgba(13,15,20,0.92);
+    backdrop-filter: blur(10px);
+    padding: 16px 0;
+    margin-bottom: 32px;
+  }
+
+  .progress-inner {
+    max-width: 780px;
+    margin: 0 auto;
+    padding: 0 4px;
+  }
+
+  .progress-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 8px;
+  }
+
+  .progress-label { font-size: 13px; color: var(--muted); }
+  .progress-pct { font-size: 13px; font-weight: 700; color: var(--accent); }
+
+  .progress-bar {
+    height: 6px;
+    background: var(--border);
+    border-radius: 100px;
+    overflow: hidden;
+  }
+
+  .progress-fill {
+    height: 100%;
+    background: linear-gradient(90deg, var(--accent), var(--accent2));
+    border-radius: 100px;
+    transition: width 0.4s ease;
+    width: 0%;
+  }
+
+  /* Submit button */
+  .submit-btn {
+    width: 100%;
+    padding: 18px;
+    background: linear-gradient(135deg, var(--accent), var(--accent2));
+    border: none;
+    border-radius: var(--radius);
+    color: #fff;
+    font-size: 17px;
+    font-weight: 800;
+    cursor: pointer;
+    letter-spacing: 0.5px;
+    transition: opacity 0.2s, transform 0.2s;
+    margin-top: 12px;
+    box-shadow: 0 8px 32px rgba(79,142,247,0.25);
+  }
+
+  .submit-btn:hover { opacity: 0.9; transform: translateY(-2px); }
+  .submit-btn:active { transform: translateY(0); }
+
+  /* Success screen */
+  .success-screen {
+    display: none;
+    position: fixed;
+    inset: 0;
+    z-index: 9999;
+    background: var(--bg);
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 40px 24px;
+    overflow-y: auto;
+  }
+
+  .success-screen.show {
+    display: flex;
+    animation: fadeInFull 0.5s ease;
+  }
+
+  @keyframes fadeInFull {
+    from { opacity: 0; transform: scale(0.97); }
+    to { opacity: 1; transform: scale(1); }
+  }
+
+  .success-inner {
+    max-width: 560px;
+    width: 100%;
+    background: var(--card);
+    border: 1px solid rgba(46,204,113,0.35);
+    border-radius: 24px;
+    padding: 60px 48px;
+    box-shadow: 0 0 80px rgba(46,204,113,0.08), 0 32px 64px rgba(0,0,0,0.4);
+    position: relative;
+    overflow: hidden;
+  }
+
+  .success-inner::before {
+    content: '';
+    position: absolute;
+    top: -60px; left: 50%;
+    transform: translateX(-50%);
+    width: 400px; height: 300px;
+    background: radial-gradient(ellipse, rgba(46,204,113,0.12) 0%, transparent 70%);
+    pointer-events: none;
+  }
+
+  .success-checkmark {
+    width: 80px; height: 80px;
+    background: rgba(46,204,113,0.15);
+    border: 2px solid var(--green);
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 36px;
+    margin: 0 auto 24px;
+    animation: popBounce 0.6s cubic-bezier(0.36, 0.07, 0.19, 0.97);
+  }
+
+  @keyframes popBounce {
+    0% { transform: scale(0); opacity: 0; }
+    60% { transform: scale(1.2); }
+    100% { transform: scale(1); opacity: 1; }
+  }
+
+  @keyframes pop {
+    0% { transform: scale(0); }
+    70% { transform: scale(1.15); }
+    100% { transform: scale(1); }
+  }
+
+  .success-screen h2 {
+    font-size: 28px;
+    font-weight: 800;
+    color: #fff;
+    margin-bottom: 12px;
+  }
+
+  .success-screen p {
+    color: var(--muted);
+    font-size: 15px;
+    line-height: 1.7;
+    margin-bottom: 32px;
+  }
+
+  .analytics-btn {
+    display: inline-block;
+    padding: 14px 32px;
+    background: rgba(46,204,113,0.15);
+    border: 1.5px solid var(--green);
+    border-radius: 10px;
+    color: var(--green);
+    font-size: 15px;
+    font-weight: 700;
+    text-decoration: none;
+    cursor: pointer;
+    transition: all 0.2s;
+    margin: 6px;
+  }
+
+  .analytics-btn:hover { background: rgba(46,204,113,0.25); }
+
+  /* Divider */
+  .divider {
+    height: 1px;
+    background: var(--border);
+    margin: 24px 0;
+  }
+
+  /* Info row */
+  .info-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+  }
+
+  @media (max-width: 540px) {
+    .info-row { grid-template-columns: 1fr; }
+    .section-card { padding: 24px 20px; }
+    .scale-group label { width: 40px; height: 40px; font-size: 13px; }
+  }
+
+  .hint { font-size: 12px; color: var(--muted); margin-top: 6px; }
+
+  /* Anonymous badge */
+  .anon-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    background: rgba(46,204,113,0.1);
+    border: 1px solid rgba(46,204,113,0.25);
+    color: var(--green);
+    font-size: 12px;
+    padding: 5px 12px;
+    border-radius: 100px;
+    margin-top: 12px;
+  }
+</style>
+</head>
+<body>
+
+<div class="progress-wrap">
+  <div class="progress-inner">
+    <div class="progress-row">
+      <span class="progress-label">შევსების პროგრესი</span>
+      <span class="progress-pct" id="pct">0%</span>
+    </div>
+    <div class="progress-bar">
+      <div class="progress-fill" id="progressFill"></div>
+    </div>
+  </div>
+</div>
+
+<div class="hero">
+  <div class="hero-badge">🧡 ზუმერული პულსი 2026 — Sales Department ⚡</div>
+  <h1>ზუმერული პულსი 2026 🔥</h1>
+  <p>აქ არ ვწერთ სადღეგრძელოებს ❌ აქ ვწერთ სიმართლეს ✅ გვაინტერესებს ყველაფერი: ფორმის ხარისხიდან დაწყებული 👕, ბექის მუშაობით დასრულებული 💼. ანონიმურობა დაცულია 🔒, გულწრფელობა – დაფასებული 🙏<br><br>
+  <em style="color:var(--muted);font-size:14px">👁️ „ზუმერული უკუკავშირები — შენი თვალით დანახული ფილიალი/ზუმერი"</em></p>
+  <div class="anon-badge">🔒 პასუხები კონფიდენციალურია</div>
+</div>
+
+<form id="surveyForm" class="form-wrapper">
+
+  <!-- ════════ 1. ზოგადი ინფო ════════ -->
+  <div class="section-card">
+    <div class="section-header">
+      <div class="section-icon" style="background: rgba(79,142,247,0.15);">👤</div>
+      <div>
+        <div class="section-title">ზოგადი ინფორმაცია</div>
+        <div class="section-subtitle">ფილიალის მითითება</div>
+      </div>
+    </div>
+
+    <div class="field">
+      <label class="field-label">ფილიალი <span class="required">*</span></label>
+      <select name="branch" required>
+        <option value="">აირჩიეთ ფილიალი...</option>
+        <optgroup label="თბილისი">
+          <option>გლდანი</option>
+          <option>ისთ ფოინთი</option>
+          <option>თბილისი მოლი</option>
+          <option>პეკინი</option>
+          <option>სითი მოლი</option>
+          <option>ცენტრალი</option>
+        </optgroup>
+        <optgroup label="ბათუმი">
+          <option>ბათუმი გრანდ მოლი</option>
+          <option>ბათუმი ჭავჭავაძე</option>
+          <option>ბათუმი სმარტი</option>
+        </optgroup>
+        <optgroup label="სხვა ქალაქები">
+          <option>ქუთაისი ვესთ მოლი</option>
+          <option>ქუთაისი #1</option>
+          <option>რუსთავი მოლი</option>
+          <option>ახალციხე</option>
+          <option>გორი მოლი</option>
+          <option>ზუგდიდი მოლი</option>
+          <option>თელავი მოლი</option>
+        </optgroup>
+      </select>
+    </div>
+  </div>
+
+  <!-- ════════ 2. ზოგადი განწყობა / გუნდი ════════ -->
+  <div class="section-card">
+    <div class="section-header">
+      <div class="section-icon" style="background: rgba(255,153,51,0.15);">🧡</div>
+      <div>
+        <div class="section-title">ზოგადი განწყობა და გუნდი</div>
+        <div class="section-subtitle">შენი გუნდი, შენი ფილიალი</div>
+      </div>
+    </div>
+
+    <div class="field">
+      <label class="field-label">1. პირდაპირ რომ ვთქვათ, რატომ ხარ ზუმერში?</label>
+      <div class="hint" style="margin-bottom:10px">რა გაჩერებს ჩვენთან, რა გიყვარს ან რა გიზიდავს ამ საქმეში? ილაპარაკე თავისუფლად, რასაც გრძნობ</div>
+      <textarea name="why_zoomer" placeholder="გაგვიზიარე გულწრფელად..."></textarea>
+    </div>
+
+    <div class="field">
+      <label class="field-label">2. გუნდურობა: რამდენად გრძნობ, რომ შენი ფილიალის გუნდი ერთიანია და ერთმანეთს ეხმარებით?</label>
+      <div class="scale-group">
+        <input type="radio" name="team_unity" id="tu0" value="0"><label for="tu0">0</label>
+        <input type="radio" name="team_unity" id="tu1" value="1"><label for="tu1">1</label>
+        <input type="radio" name="team_unity" id="tu2" value="2"><label for="tu2">2</label>
+        <input type="radio" name="team_unity" id="tu3" value="3"><label for="tu3">3</label>
+        <input type="radio" name="team_unity" id="tu4" value="4"><label for="tu4">4</label>
+        <input type="radio" name="team_unity" id="tu5" value="5"><label for="tu5">5</label>
+        <input type="radio" name="team_unity" id="tu6" value="6"><label for="tu6">6</label>
+        <input type="radio" name="team_unity" id="tu7" value="7"><label for="tu7">7</label>
+        <input type="radio" name="team_unity" id="tu8" value="8"><label for="tu8">8</label>
+        <input type="radio" name="team_unity" id="tu9" value="9"><label for="tu9">9</label>
+        <input type="radio" name="team_unity" id="tu10" value="10"><label for="tu10">10</label>
+      </div>
+      <div class="hint">0 — სრულიად არა · 10 — სრულიად დიახ</div>
+    </div>
+
+    <div class="field">
+      <label class="field-label">4. საერთო მუხტი: რამდენად პოზიტიური განწყობაა ფილიალში სამუშაო დღის განმავლობაში?</label>
+      <div class="scale-group">
+        <input type="radio" name="team_energy" id="te0" value="0"><label for="te0">0</label>
+        <input type="radio" name="team_energy" id="te1" value="1"><label for="te1">1</label>
+        <input type="radio" name="team_energy" id="te2" value="2"><label for="te2">2</label>
+        <input type="radio" name="team_energy" id="te3" value="3"><label for="te3">3</label>
+        <input type="radio" name="team_energy" id="te4" value="4"><label for="te4">4</label>
+        <input type="radio" name="team_energy" id="te5" value="5"><label for="te5">5</label>
+        <input type="radio" name="team_energy" id="te6" value="6"><label for="te6">6</label>
+        <input type="radio" name="team_energy" id="te7" value="7"><label for="te7">7</label>
+        <input type="radio" name="team_energy" id="te8" value="8"><label for="te8">8</label>
+        <input type="radio" name="team_energy" id="te9" value="9"><label for="te9">9</label>
+        <input type="radio" name="team_energy" id="te10" value="10"><label for="te10">10</label>
+      </div>
+      <div class="hint">0 — ძალიან ნეგატიური · 10 — ძალიან პოზიტიური</div>
+    </div>
+
+    <div class="field">
+      <label class="field-label">5. საქმის განაწილება: რამდენად სამართლიანად ნაწილდება საქმე შენს ფილიალში?</label>
+      <div class="hint" style="margin-bottom:10px">თუ ვინმე „ზარმაცობს" ან პირიქით, ვინმე ზედმეტად იტვირთება, გვითხარი</div>
+      <div class="scale-group">
+        <input type="radio" name="workload_fair" id="wf0" value="0"><label for="wf0">0</label>
+        <input type="radio" name="workload_fair" id="wf1" value="1"><label for="wf1">1</label>
+        <input type="radio" name="workload_fair" id="wf2" value="2"><label for="wf2">2</label>
+        <input type="radio" name="workload_fair" id="wf3" value="3"><label for="wf3">3</label>
+        <input type="radio" name="workload_fair" id="wf4" value="4"><label for="wf4">4</label>
+        <input type="radio" name="workload_fair" id="wf5" value="5"><label for="wf5">5</label>
+        <input type="radio" name="workload_fair" id="wf6" value="6"><label for="wf6">6</label>
+        <input type="radio" name="workload_fair" id="wf7" value="7"><label for="wf7">7</label>
+        <input type="radio" name="workload_fair" id="wf8" value="8"><label for="wf8">8</label>
+        <input type="radio" name="workload_fair" id="wf9" value="9"><label for="wf9">9</label>
+        <input type="radio" name="workload_fair" id="wf10" value="10"><label for="wf10">10</label>
+      </div>
+      <div class="hint">0 — სრულიად არასამართლიანი · 10 — სრულიად სამართლიანი</div>
+    </div>
+  </div>
+
+  <!-- ════════ 3. უკუკავშირი და მენეჯმენტი ════════ -->
+  <div class="section-card">
+    <div class="section-header">
+      <div class="section-icon" style="background: rgba(46,204,113,0.12);">🗣️</div>
+      <div>
+        <div class="section-title">უკუკავშირი და მენეჯმენტი</div>
+        <div class="section-subtitle">ხელმძღვანელობა და კომუნიკაცია</div>
+      </div>
+    </div>
+
+    <div class="field">
+      <label class="field-label">6. დადებით უკუკავშირს თუ იღებ ხოლმე?</label>
+      <div class="hint" style="margin-bottom:10px">როცა კარგ საქმეს აკეთებ, თუ გრძნობ დაფასებას პასუხისმგებელი პირებისგან?</div>
+      <div class="scale-group">
+        <input type="radio" name="positive_fb" id="pfb0" value="0"><label for="pfb0">0</label>
+        <input type="radio" name="positive_fb" id="pfb1" value="1"><label for="pfb1">1</label>
+        <input type="radio" name="positive_fb" id="pfb2" value="2"><label for="pfb2">2</label>
+        <input type="radio" name="positive_fb" id="pfb3" value="3"><label for="pfb3">3</label>
+        <input type="radio" name="positive_fb" id="pfb4" value="4"><label for="pfb4">4</label>
+        <input type="radio" name="positive_fb" id="pfb5" value="5"><label for="pfb5">5</label>
+        <input type="radio" name="positive_fb" id="pfb6" value="6"><label for="pfb6">6</label>
+        <input type="radio" name="positive_fb" id="pfb7" value="7"><label for="pfb7">7</label>
+        <input type="radio" name="positive_fb" id="pfb8" value="8"><label for="pfb8">8</label>
+        <input type="radio" name="positive_fb" id="pfb9" value="9"><label for="pfb9">9</label>
+        <input type="radio" name="positive_fb" id="pfb10" value="10"><label for="pfb10">10</label>
+      </div>
+      <div class="hint">0 — არასოდეს · 10 — ყოველთვის</div>
+    </div>
+
+    <div class="field">
+      <label class="field-label">7. უარყოფითი უკუკავშირი/რეკომენდაცია — როგორი სახით იღებ?</label>
+      <div class="hint" style="margin-bottom:10px">რამდენად გასაგებად და დაბალანსებულად იღებ მითითებებს? ცალკე გეუბნებიან თუ გუნდთან ერთად? დაგვიწერე გულწრფელად</div>
+      <textarea name="criticism_style" placeholder="გაგვიზიარე გამოცდილება..."></textarea>
+    </div>
+
+    <div class="field">
+      <label class="field-label">8. მხარდაჭერა: რამდენად სწრაფად და ეფექტურად გეხმარება „ბექი", როცა პრობლემა გაქვს?</label>
+      <div class="scale-group">
+        <input type="radio" name="support_beqi" id="sb0" value="0"><label for="sb0">0</label>
+        <input type="radio" name="support_beqi" id="sb1" value="1"><label for="sb1">1</label>
+        <input type="radio" name="support_beqi" id="sb2" value="2"><label for="sb2">2</label>
+        <input type="radio" name="support_beqi" id="sb3" value="3"><label for="sb3">3</label>
+        <input type="radio" name="support_beqi" id="sb4" value="4"><label for="sb4">4</label>
+        <input type="radio" name="support_beqi" id="sb5" value="5"><label for="sb5">5</label>
+        <input type="radio" name="support_beqi" id="sb6" value="6"><label for="sb6">6</label>
+        <input type="radio" name="support_beqi" id="sb7" value="7"><label for="sb7">7</label>
+        <input type="radio" name="support_beqi" id="sb8" value="8"><label for="sb8">8</label>
+        <input type="radio" name="support_beqi" id="sb9" value="9"><label for="sb9">9</label>
+        <input type="radio" name="support_beqi" id="sb10" value="10"><label for="sb10">10</label>
+      </div>
+      <div class="hint">0 — საერთოდ არ ეხმარება · 10 — ყოველთვის სწრაფად</div>
+    </div>
+
+    <div class="field">
+      <label class="field-label">9. კომუნიკაცია: რამდენად გასაგებად მოდის ინფორმაცია/სიახლეები სათავო ოფისიდან?</label>
+      <div class="scale-group">
+        <input type="radio" name="hq_comm" id="hc0" value="0"><label for="hc0">0</label>
+        <input type="radio" name="hq_comm" id="hc1" value="1"><label for="hc1">1</label>
+        <input type="radio" name="hq_comm" id="hc2" value="2"><label for="hc2">2</label>
+        <input type="radio" name="hq_comm" id="hc3" value="3"><label for="hc3">3</label>
+        <input type="radio" name="hq_comm" id="hc4" value="4"><label for="hc4">4</label>
+        <input type="radio" name="hq_comm" id="hc5" value="5"><label for="hc5">5</label>
+        <input type="radio" name="hq_comm" id="hc6" value="6"><label for="hc6">6</label>
+        <input type="radio" name="hq_comm" id="hc7" value="7"><label for="hc7">7</label>
+        <input type="radio" name="hq_comm" id="hc8" value="8"><label for="hc8">8</label>
+        <input type="radio" name="hq_comm" id="hc9" value="9"><label for="hc9">9</label>
+        <input type="radio" name="hq_comm" id="hc10" value="10"><label for="hc10">10</label>
+      </div>
+      <div class="hint">0 — სრულიად გაუგებრად · 10 — ყოველთვის გასაგებად</div>
+    </div>
+  </div>
+
+  <!-- ════════ 4. განვითარება და ტრენინგები ════════ -->
+  <div class="section-card">
+    <div class="section-header">
+      <div class="section-icon" style="background: rgba(79,142,247,0.15);">🎓</div>
+      <div>
+        <div class="section-title">განვითარება და ტრენინგები</div>
+        <div class="section-subtitle">ცოდნა და ზრდა</div>
+      </div>
+    </div>
+
+    <div class="field">
+      <label class="field-label">12. ტექნიკის ტრენინგებზე რას იტყვი?</label>
+      <div class="hint" style="margin-bottom:10px">გეხმარება რეალურად გაყიდვებში? არის რამე ახალი და საინტერესო, თუ უბრალოდ ფორმალობაა? გაგვიზიარე აზრი ტრენერებზეც</div>
+      <textarea name="training_feedback" placeholder="შენი გამოცდილება ტრენინგებზე..."></textarea>
+    </div>
+
+    <div class="field">
+      <label class="field-label">13. კიდევ რის სწავლას ისურვებდი?</label>
+      <div class="hint" style="margin-bottom:10px">რა გაკლია, რომ უკეთესი იყო შენს საქმეში?</div>
+      <textarea name="learning_wishes" placeholder="სასურველი ტრენინგები ან უნარები..."></textarea>
+    </div>
+  </div>
+
+  <!-- ════════ 5. წესები და დისციპლინა ════════ -->
+  <div class="section-card">
+    <div class="section-header">
+      <div class="section-icon" style="background: rgba(231,76,60,0.12);">🛠️</div>
+      <div>
+        <div class="section-title">წესები და დისციპლინა</div>
+        <div class="section-subtitle">ფილიალის წეს-წყობა</div>
+      </div>
+    </div>
+
+    <div class="field">
+      <label class="field-label">14. ფილიალის წესები და დისციპლინა</label>
+      <div class="hint" style="margin-bottom:10px">რამდენად ლოგიკურია და საჭიროა არსებული წესები? რის ცვლილება/გაუმჯობესებას ისურვებდი?</div>
+      <textarea name="rules_feedback" placeholder="შენი აზრი წესებსა და დისციპლინაზე..."></textarea>
+    </div>
+  </div>
+
+  <!-- ════════ 6. შენი რჩევები ════════ -->
+  <div class="section-card">
+    <div class="section-header">
+      <div class="section-icon" style="background: rgba(241,196,15,0.12);">💡</div>
+      <div>
+        <div class="section-title">შენი რჩევები</div>
+        <div class="section-subtitle">Short & Sweet — პირდაპირ თქვი</div>
+      </div>
+    </div>
+
+    <div class="field">
+      <label class="field-label">15. რას ურჩევდი შენს გუნდს?</label>
+      <div class="hint" style="margin-bottom:10px">რომ უფრო მაგრად იმუშაოთ</div>
+      <textarea name="advice_team" placeholder="შენი რჩევა გუნდისთვის..."></textarea>
+    </div>
+
+    <div class="field">
+      <label class="field-label">16. რას ურჩევდი შენი ფილიალის მენეჯერს/პასუხისმგებელ პირს?</label>
+      <div class="hint" style="margin-bottom:10px">რა შეცვალოს, რომ უფრო კომფორტულად იგრძნოთ თავი</div>
+      <textarea name="advice_manager" placeholder="შენი რჩევა მენეჯერისთვის..."></textarea>
+    </div>
+
+    <div class="field">
+      <label class="field-label">17. ზუმერს, როგორც კომპანიას, რას ურჩევდი?</label>
+      <div class="hint" style="margin-bottom:10px">არ მოგერიდოს, გვითხარი პირდაპირ</div>
+      <textarea name="advice_company" placeholder="შენი რჩევა კომპანიისთვის..."></textarea>
+    </div>
+  </div>
+
+  <!-- ════════ 7. ფორმები და ვებ აპლიკაცია ════════ -->
+  <div class="section-card">
+    <div class="section-header">
+      <div class="section-icon" style="background: rgba(124,92,252,0.15);">✨</div>
+      <div>
+        <div class="section-title">ფორმები და ვებ აპლიკაცია</div>
+        <div class="section-subtitle">სამუშაო ინსტრუმენტები</div>
+      </div>
+    </div>
+
+    <div class="field">
+      <label class="field-label">18. ახალი ფორმები — მაისურის სტილი / ხარისხი / მატერია</label>
+      <div class="hint" style="margin-bottom:10px">მოგწონს თუ არა, როგორ გამოიყურები მასში?</div>
+      <div class="scale-group">
+        <input type="radio" name="uniform_quality" id="uq0" value="0"><label for="uq0">0</label>
+        <input type="radio" name="uniform_quality" id="uq1" value="1"><label for="uq1">1</label>
+        <input type="radio" name="uniform_quality" id="uq2" value="2"><label for="uq2">2</label>
+        <input type="radio" name="uniform_quality" id="uq3" value="3"><label for="uq3">3</label>
+        <input type="radio" name="uniform_quality" id="uq4" value="4"><label for="uq4">4</label>
+        <input type="radio" name="uniform_quality" id="uq5" value="5"><label for="uq5">5</label>
+        <input type="radio" name="uniform_quality" id="uq6" value="6"><label for="uq6">6</label>
+        <input type="radio" name="uniform_quality" id="uq7" value="7"><label for="uq7">7</label>
+        <input type="radio" name="uniform_quality" id="uq8" value="8"><label for="uq8">8</label>
+        <input type="radio" name="uniform_quality" id="uq9" value="9"><label for="uq9">9</label>
+        <input type="radio" name="uniform_quality" id="uq10" value="10"><label for="uq10">10</label>
+      </div>
+      <div class="hint">0 — საერთოდ არ მომწონს · 10 — ძალიან მომწონს</div>
+    </div>
+
+    <div class="field">
+      <label class="field-label">19. ახალი ფორმების ვიზუალი / ფერი</label>
+      <div class="hint" style="margin-bottom:10px">გაგვიზიარე ვიზუალებზე/ფერზე უკუკავშირი (ფერს თუ დაგვიკომენტარებ უფრო დაგვეხმარები)</div>
+      <textarea name="uniform_visual" placeholder="ვიზუალი, ფერი, კომბინაცია..."></textarea>
+    </div>
+
+    <div class="field">
+      <label class="field-label">20. ახალი ფორმების კომენტარი: რის გაუმჯობესებას ისურვებდი ზაფხულის ფორმებში?</label>
+      <textarea name="uniform_improve" placeholder="წინადადებები ფორმების გაუმჯობესებისთვის..."></textarea>
+    </div>
+
+    <div class="divider"></div>
+
+    <div class="field">
+      <label class="field-label">21. რამდენად გიმარტივებს სამუშაოს არსებული ვებ აპლიკაცია?</label>
+      <div class="hint" style="margin-bottom:10px">10 — ძალიან მიმარტივებს, 0 — საერთოდ არ არის მოსახერხებელი</div>
+      <div class="scale-group">
+        <input type="radio" name="webapp_score" id="ws0" value="0"><label for="ws0">0</label>
+        <input type="radio" name="webapp_score" id="ws1" value="1"><label for="ws1">1</label>
+        <input type="radio" name="webapp_score" id="ws2" value="2"><label for="ws2">2</label>
+        <input type="radio" name="webapp_score" id="ws3" value="3"><label for="ws3">3</label>
+        <input type="radio" name="webapp_score" id="ws4" value="4"><label for="ws4">4</label>
+        <input type="radio" name="webapp_score" id="ws5" value="5"><label for="ws5">5</label>
+        <input type="radio" name="webapp_score" id="ws6" value="6"><label for="ws6">6</label>
+        <input type="radio" name="webapp_score" id="ws7" value="7"><label for="ws7">7</label>
+        <input type="radio" name="webapp_score" id="ws8" value="8"><label for="ws8">8</label>
+        <input type="radio" name="webapp_score" id="ws9" value="9"><label for="ws9">9</label>
+        <input type="radio" name="webapp_score" id="ws10" value="10"><label for="ws10">10</label>
+      </div>
+      <div class="hint">0 — საერთოდ არ არის მოსახერხებელი · 10 — ძალიან მიმარტივებს</div>
+    </div>
+
+    <div class="field">
+      <label class="field-label">22. რის გაუმჯობესებას ისურვებდი ვებ აპლიკაციაში?</label>
+      <textarea name="webapp_improve" placeholder="შენი რეკომენდაციები ვებ აპლიკაციისთვის..."></textarea>
+    </div>
+  </div>
+
+  <!-- ════════ 8. ფინალი ════════ -->
+  <div class="section-card">
+    <div class="section-header">
+      <div class="section-icon" style="background: rgba(46,204,113,0.12);">✨</div>
+      <div>
+        <div class="section-title">ფინალი</div>
+        <div class="section-subtitle">ბოლო კითხვები</div>
+      </div>
+    </div>
+
+    <div class="field">
+      <label class="field-label">23. 2026 წლის სურვილები</label>
+      <div class="hint" style="margin-bottom:10px">ოღონდ არა სადღეგრძელოები, არამედ რამე რელევანტური და „ზუმერული"</div>
+      <textarea name="wishes_2026" placeholder="შენი სურვილები 2026 წლისთვის..."></textarea>
+    </div>
+
+    <div class="field">
+      <label class="field-label">24. გჯერა, რომ ამ კვლევის მერე რამე რეალურად შეიცვლება?</label>
+      <div class="options-list">
+        <label class="option-item"><input type="radio" name="survey_trust" value="yes"> <span>✅ კი</span></label>
+        <label class="option-item"><input type="radio" name="survey_trust" value="hope"> <span>🤞 იმედი მაქვს</span></label>
+        <label class="option-item"><input type="radio" name="survey_trust" value="no"> <span>❌ არა</span></label>
+      </div>
+    </div>
+  </div>
+
+  <button type="submit" class="submit-btn">✅ კითხვარის გაგზავნა</button>
+</form>
+
+<!-- Success screen -->
+<div class="success-screen" id="successScreen">
+  <div class="success-inner">
+    <div class="success-checkmark">✅</div>
+    <div style="font-size:13px;color:var(--green);font-weight:700;letter-spacing:2px;text-transform:uppercase;margin-bottom:16px">კითხვარი გაგზავნილია</div>
+    <h2 style="font-size:28px;font-weight:900;color:#fff;margin-bottom:14px;letter-spacing:-0.5px">მადლობა გულწრფელობისთვის! 🙌</h2>
+    <p style="color:var(--muted);font-size:15px;line-height:1.8;margin-bottom:36px">პასუხებს დავამუშავებთ 📊 და შედეგებს მალე გაგიზიარებთ 🚀</p>
+    <div style="height:1px;background:var(--border);margin-bottom:28px"></div>
+    <div style="display:flex;gap:12px;justify-content:center;flex-wrap:wrap">
+      <button class="analytics-btn" onclick="location.reload()">
+        ➕ ახალი კითხვარი
+      </button>
+    </div>
+  </div>
+</div>
+
+<script>
+  // ══ Google Apps Script URL — deploy-ის შემდეგ ჩასვი აქ ══
+  const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbyO9TB43_ONF7FgD-_pUIh4CRTKN_NvORrXSwVwyHRMJNyV1mCh7XY8_yZo4Ofibk0J_g/exec';
+
+  // ──── Progress tracking ────
+  function updateProgress() {
+    const sections = [
+      'branch','team_unity','team_energy','workload_fair',
+      'positive_fb','support_beqi','hq_comm',
+      'uniform_quality','webapp_score','survey_trust'
+    ];
+
+    let answered = 0;
+    sections.forEach(name => {
+      const radio = document.querySelector(`input[name="${name}"]:checked`);
+      const select = document.querySelector(`select[name="${name}"]`);
+      if (radio || (select && select.value)) answered++;
+    });
+
+    const pct = Math.round((answered / sections.length) * 100);
+    document.getElementById('progressFill').style.width = pct + '%';
+    document.getElementById('pct').textContent = pct + '%';
+  }
+
+  document.querySelectorAll('input, select, textarea').forEach(el => {
+    el.addEventListener('change', updateProgress);
+    el.addEventListener('input', updateProgress);
+  });
+
+  // ──── Highlight selected option items ────
+  document.querySelectorAll('.option-item input').forEach(input => {
+    input.addEventListener('change', () => {
+      const name = input.name;
+      document.querySelectorAll(`.option-item input[name="${name}"]`).forEach(i => {
+        i.closest('.option-item').classList.toggle('selected', i.checked);
+      });
+    });
+  });
+
+  // ──── Form submission ────
+  document.getElementById('surveyForm').addEventListener('submit', async function(e) {
+    e.preventDefault();
+
+    const btn = document.querySelector('.submit-btn');
+    btn.textContent = '⏳ იგზავნება...';
+    btn.disabled = true;
+
+    const fd = new FormData(this);
+    const data = {};
+    fd.forEach((v, k) => {
+      if (data[k]) {
+        data[k] = Array.isArray(data[k]) ? [...data[k], v] : [data[k], v];
+      } else {
+        data[k] = v;
+      }
+    });
+    data.timestamp = new Date().toISOString();
+
+    // 1. localStorage-ში შენახვა (ლოკალური ანალიტიკისთვის)
+    const existing = JSON.parse(localStorage.getItem('surveyResponses') || '[]');
+    data._id = Date.now();
+    existing.push(data);
+    localStorage.setItem('surveyResponses', JSON.stringify(existing));
+
+    // 2. Google Sheets-ში გაგზავნა
+    if (SCRIPT_URL && SCRIPT_URL !== 'YOUR_SCRIPT_URL_HERE') {
+      try {
+        await fetch(SCRIPT_URL, {
+          method: 'POST',
+          mode: 'no-cors',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(data)
+        });
+      } catch (err) {
+        console.warn('Sheets sync failed:', err);
+      }
+    }
+
+    document.getElementById('surveyForm').style.display = 'none';
+    document.getElementById('successScreen').style.display = 'block';
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  });
+</script>
+</body>
+</html>
