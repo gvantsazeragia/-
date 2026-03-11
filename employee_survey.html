@@ -280,8 +280,39 @@
     width: 0%;
   }
 
-  /* Submit button */
-  .submit-btn {
+  /* Error styles */
+  .field--error .field-label::after {
+    content: ' *';
+    color: var(--red);
+  }
+  .field--error .scale-group label,
+  .field--error select {
+    border-color: var(--red) !important;
+    outline: 2px solid rgba(231,76,60,0.3);
+    border-radius: 8px;
+  }
+  .field--error .scale-group {
+    padding: 8px;
+    background: rgba(231,76,60,0.07);
+    border-radius: 12px;
+    border: 1px solid rgba(231,76,60,0.3);
+  }
+  .field--error select {
+    background: rgba(231,76,60,0.07) !important;
+  }
+  .field--error textarea {
+    border-color: rgba(231,76,60,0.6) !important;
+    background: rgba(231,76,60,0.05) !important;
+  }
+    color: var(--red);
+    font-size: 12px;
+    font-weight: 700;
+    margin-top: 8px;
+    padding: 6px 12px;
+    background: rgba(231,76,60,0.1);
+    border-radius: 8px;
+    border: 1px solid rgba(231,76,60,0.25);
+  }
     width: 100%;
     padding: 18px;
     background: linear-gradient(135deg, var(--accent), var(--accent2));
@@ -871,6 +902,27 @@
     el.addEventListener('input', updateProgress);
   });
 
+  // ──── Textarea სიმბოლო counter ────
+  document.querySelectorAll('textarea').forEach(ta => {
+    const name = ta.getAttribute('name');
+    const req = REQUIRED_FIELDS.find(f => f.name === name && f.minLen);
+    if (!req) return;
+
+    const counter = document.createElement('div');
+    counter.className = 'char-counter';
+    counter.style.cssText = 'font-size:11px;color:var(--muted);text-align:right;margin-top:4px;';
+    ta.parentNode.insertBefore(counter, ta.nextSibling);
+
+    function update() {
+      const len = ta.value.trim().length;
+      const ok = len >= req.minLen;
+      counter.textContent = `${len} / ${req.minLen} სიმბოლო`;
+      counter.style.color = ok ? 'var(--green)' : len > 0 ? 'var(--yellow)' : 'var(--muted)';
+    }
+    ta.addEventListener('input', update);
+    update();
+  });
+
   // ──── Highlight selected option items ────
   document.querySelectorAll('.option-item input').forEach(input => {
     input.addEventListener('change', () => {
@@ -881,9 +933,90 @@
     });
   });
 
+  // ──── Validation ────
+  const REQUIRED_FIELDS = [
+    { name: 'branch',           label: 'ფილიალი',                  type: 'select' },
+    { name: 'team_unity',       label: 'გუნდურობა',                type: 'radio' },
+    { name: 'team_energy',      label: 'საერთო მუხტი',             type: 'radio' },
+    { name: 'workload_fair',    label: 'საქმის განაწილება',         type: 'radio' },
+    { name: 'why_zoomer',       label: 'რატომ ხარ ზუმერში?',       type: 'text', minLen: 20 },
+    { name: 'positive_fb',      label: 'დადებითი უკუკავშირი',      type: 'radio' },
+    { name: 'criticism_style',  label: 'კრიტიკის სახე',            type: 'text', minLen: 20 },
+    { name: 'support_beqi',     label: 'ბექის მხარდაჭერა',         type: 'radio' },
+    { name: 'hq_comm',          label: 'HQ კომუნიკაცია',           type: 'radio' },
+    { name: 'training_feedback',label: 'ტრენინგებზე გამოხმაურება', type: 'text', minLen: 20 },
+    { name: 'learning_wishes',  label: 'სასურველი სწავლება',       type: 'text', minLen: 20 },
+    { name: 'rules_feedback',   label: 'წესები და დისციპლინა',     type: 'text', minLen: 20 },
+    { name: 'advice_team',      label: 'რჩევა გუნდს',              type: 'text', minLen: 20 },
+    { name: 'advice_manager',   label: 'რჩევა მენეჯერს',           type: 'text', minLen: 20 },
+    { name: 'advice_company',   label: 'რჩევა ზუმერს',             type: 'text', minLen: 20 },
+    { name: 'uniform_quality',  label: 'ფორმის ხარისხი',           type: 'radio' },
+    { name: 'uniform_visual',   label: 'ფორმის ვიზუალი/ფერი',      type: 'text', minLen: 20 },
+    { name: 'webapp_score',     label: 'ვებ-აპლიკაცია',            type: 'radio' },
+    { name: 'webapp_improve',   label: 'ვებ-აპის გაუმჯობესება',    type: 'text', minLen: 20 },
+    { name: 'wishes_2026',      label: '2026 სურვილები',            type: 'text', minLen: 20 },
+    { name: 'survey_trust',     label: 'გჯერა რომ შეიცვლება?',     type: 'radio' },
+  ];
+    { name: 'uniform_quality',  label: 'ფორმის ხარისხი' },
+    { name: 'webapp_score',     label: 'ვებ-აპლიკაცია' },
+    { name: 'survey_trust',     label: 'გჯერა რომ შეიცვლება?' },
+  ];
+
+  function validateForm() {
+    document.querySelectorAll('.field-error').forEach(el => el.remove());
+    document.querySelectorAll('.field--error').forEach(el => el.classList.remove('field--error'));
+
+    let firstError = null;
+
+    REQUIRED_FIELDS.forEach(({ name, label, type, minLen }) => {
+      const input = document.querySelector(`[name="${name}"]`);
+      if (!input) return;
+
+      let filled = false;
+      let errorMsg = `⚠️ გთხოვ შეავსე: ${label}`;
+
+      if (type === 'text') {
+        const val = input.value.trim();
+        if (val.length === 0) {
+          errorMsg = `⚠️ სავალდებულოა: ${label}`;
+        } else if (val.length < minLen) {
+          filled = false;
+          errorMsg = `⚠️ მინიმუმ ${minLen} სიმბოლო (ახლა: ${val.length})`;
+        } else {
+          filled = true;
+        }
+      } else if (type === 'radio') {
+        filled = !!document.querySelector(`input[name="${name}"]:checked`);
+      } else if (type === 'select') {
+        const sel = document.querySelector(`select[name="${name}"]`);
+        filled = sel && sel.value !== '';
+      }
+
+      if (!filled) {
+        const field = input.closest('.field');
+        if (field) {
+          field.classList.add('field--error');
+          const err = document.createElement('div');
+          err.className = 'field-error';
+          err.textContent = errorMsg;
+          field.appendChild(err);
+          if (!firstError) firstError = field;
+        }
+      }
+    });
+
+    if (firstError) {
+      firstError.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      return false;
+    }
+    return true;
+  }
+
   // ──── Form submission ────
   document.getElementById('surveyForm').addEventListener('submit', async function(e) {
     e.preventDefault();
+
+    if (!validateForm()) return;
 
     const btn = document.querySelector('.submit-btn');
     btn.textContent = '⏳ იგზავნება...';
